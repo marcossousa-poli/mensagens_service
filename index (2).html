@@ -1,0 +1,433 @@
+<title>Mensagem de Serviço Meta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: coluna única de leitura (~880px), cabeçalho alinhado à esquerda, navegação por seções, exemplos como "extrato" de conversa com custo por balão */
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --ink:#10201C; --soft:#5A6B66;
+  --line:#D9E2DF; --accent:#0B7A63; --accent-soft:#E2F2ED;
+  --warn:#B4530A; --warn-soft:#FBEEDD; --free:#2F7A3A; --bubble-in:#E9EFED; --bubble-out:#DCF3E9;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1513; --surface:#14201D; --ink:#E4EDEA; --soft:#98AAA5;
+    --line:#26352F; --accent:#3DC6A3; --accent-soft:#16332B;
+    --warn:#F2A55A; --warn-soft:#382615; --free:#7CD18A; --bubble-in:#1C2A26; --bubble-out:#173A2F;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1513; --surface:#14201D; --ink:#E4EDEA; --soft:#98AAA5;
+  --line:#26352F; --accent:#3DC6A3; --accent-soft:#16332B;
+  --warn:#F2A55A; --warn-soft:#382615; --free:#7CD18A; --bubble-in:#1C2A26; --bubble-out:#173A2F;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0}
+.wrap{max-width:880px;margin:0 auto;padding-inline:20px;padding-block:40px 72px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5.5vw,3.1rem);font-weight:800;letter-spacing:-.01em}
+h2{font-size:clamp(1.45rem,3.4vw,1.9rem);font-weight:800}
+h3{font-size:1.12rem;font-weight:600}
+p{margin:0;max-width:66ch}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.mono{font-family:var(--f-mono)}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+header{display:grid;gap:18px;padding-bottom:28px;border-bottom:1px solid var(--line)}
+.lede{font-size:1.12rem;color:var(--soft)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:6px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:2px}
+.fact b{font-family:var(--f-display);font-size:1.6rem;font-weight:800;font-variant-numeric:tabular-nums}
+.fact span{font-size:.88rem;color:var(--soft)}
+.fact.hl{border-color:var(--warn);background:var(--warn-soft)}
+.fact.hl b{color:var(--warn)}
+
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;padding-block:20px}
+nav.toc a{font-size:.85rem;text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px}
+nav.toc a:hover{border-color:var(--accent);color:var(--accent)}
+
+section{display:grid;gap:18px;padding-block:36px;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+
+.alert{border:1px solid var(--warn);background:var(--warn-soft);border-radius:10px;padding:14px 16px;display:grid;gap:4px}
+.alert strong{color:var(--warn)}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.95rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);font-weight:500}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.changed td{background:var(--warn-soft)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:.72rem;padding:1px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.tag.free{color:var(--free)}
+.tag.paid{color:var(--warn)}
+.tag.same{color:var(--soft)}
+
+/* two col */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.box.pay{border-top:3px solid var(--warn)}
+.box.ok{border-top:3px solid var(--free)}
+
+/* chat receipts */
+.chat{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.chat-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.chat-head p{color:var(--soft);font-size:.9rem}
+.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:8px 18px;border-bottom:1px dashed var(--line)}
+.bub{border-radius:12px;padding:8px 12px;font-size:.94rem;max-width:min(460px,100%);min-width:0}
+.row.in .bub{background:var(--bubble-in);justify-self:start;border-top-left-radius:3px}
+.row.out .bub{background:var(--bubble-out);justify-self:end;border-top-right-radius:3px}
+.bub small{display:block;font-family:var(--f-mono);font-size:.7rem;color:var(--soft);margin-bottom:2px;letter-spacing:.03em}
+.cost{font-family:var(--f-mono);font-size:.82rem;text-align:right;min-width:92px;font-variant-numeric:tabular-nums}
+.cost em{display:block;font-style:normal;font-size:.68rem;color:var(--soft)}
+.totals{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line)}
+.totals div{background:var(--surface);padding:12px 18px;display:grid;gap:2px}
+.totals span{font-size:.8rem;color:var(--soft)}
+.totals b{font-family:var(--f-mono);font-size:1.05rem;font-variant-numeric:tabular-nums}
+.totals .now b{color:var(--warn)}
+
+/* simulator */
+.sim{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:18px}
+.presets{display:flex;flex-wrap:wrap;gap:8px}
+.presets button{font:inherit;font-size:.85rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.presets button:hover{border-color:var(--accent)}
+.presets button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.fields label{display:grid;gap:6px;font-size:.88rem;color:var(--soft)}
+.fields input{font:inherit;font-family:var(--f-mono);font-size:1rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+.result{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.result div{border-radius:10px;padding:12px 14px;background:var(--bg);display:grid;gap:2px}
+.result span{font-size:.8rem;color:var(--soft)}
+.result b{font-family:var(--f-display);font-size:1.45rem;font-variant-numeric:tabular-nums}
+.result .big{background:var(--warn-soft)}
+.result .big b{color:var(--warn)}
+.note{font-size:.85rem;color:var(--soft)}
+
+/* tips & faq */
+.tips{display:grid;gap:12px}
+.tip{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.tip .k{font-family:var(--f-mono);font-size:.8rem;color:var(--accent);grid-row:span 2}
+.tip p{color:var(--soft);font-size:.94rem}
+.script{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 10px 10px 0;display:grid;gap:4px}
+.script small{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 16px}
+details+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;padding:12px 0;list-style-position:outside}
+details p{padding-bottom:14px;color:var(--soft)}
+.sources{font-size:.88rem;display:grid;gap:4px;padding-left:18px;margin:0}
+footer{padding-top:24px;font-size:.82rem;color:var(--soft)}
+@media (max-width:520px){
+  .row{grid-template-columns:1fr;gap:4px}
+  .cost{text-align:left}
+  .row.out .cost{text-align:right}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">Treinamento comercial · WhatsApp API oficial · Vigência 01/10/2026</p>
+  <h1>A resposta ao cliente no WhatsApp passa a ter preço</h1>
+  <p class="lede">A partir de 1º de outubro de 2026, a Meta cobra por mensagem de serviço: cada resposta livre que a empresa envia dentro da janela de 24 horas. Este material explica a regra, mostra quanto custa na prática e prepara você para responder as dúvidas dos clientes.</p>
+  <div class="facts">
+    <div class="fact hl"><b>R$ 0,0350</b><span>por mensagem de serviço entregue para números do Brasil (US$ 0,0068 em contas em dólar)</span></div>
+    <div class="fact"><b>1.000</b><span>mensagens de serviço grátis por mês, em cada número de telefone</span></div>
+    <div class="fact"><b>Sem desconto</b><span>por volume: a mensagem 200 mil custa o mesmo que a 1.001ª</span></div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Seções">
+  <a href="#muda">O que muda</a>
+  <a href="#servico">O que é serviço</a>
+  <a href="#franquia">Franquia de 1.000</a>
+  <a href="#gratis">O que segue grátis</a>
+  <a href="#exemplos">Exemplos práticos</a>
+  <a href="#simulador">Simulador</a>
+  <a href="#ia">Agentes de IA</a>
+  <a href="#cliente">Como falar com o cliente</a>
+  <a href="#faq">Perguntas frequentes</a>
+</nav>
+
+<section id="muda">
+  <p class="eyebrow">Visão geral</p>
+  <h2>O que muda em 1º de outubro</h2>
+  <p>Nenhuma tarifa subiu no Brasil. A mudança é que duas coisas que eram gratuitas passam a ser cobradas: a mensagem de serviço e o template de utilidade enviado dentro da janela de 24h. A virada acontece à meia-noite, no fuso horário configurado na conta do WhatsApp (WABA).</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Tipo de mensagem</th><th>Quando é usada</th><th class="r">Até 30/09</th><th class="r">A partir de 01/10</th></tr></thead>
+      <tbody>
+        <tr><td><b>Marketing</b> <span class="tag same">template</span></td><td>A empresa procura o cliente para vender ou promover</td><td class="r">R$ 0,3217</td><td class="r">R$ 0,3217</td></tr>
+        <tr><td><b>Utilidade fora da janela</b> <span class="tag same">template</span></td><td>Aviso sobre algo que o cliente já contratou</td><td class="r">R$ 0,0350</td><td class="r">R$ 0,0350</td></tr>
+        <tr><td><b>Autenticação</b> <span class="tag same">template</span></td><td>Código de acesso / verificação</td><td class="r">R$ 0,0350</td><td class="r">R$ 0,0350</td></tr>
+        <tr class="changed"><td><b>Utilidade dentro da janela</b> <span class="tag paid">muda</span></td><td>Template de utilidade enviado com a janela de 24h aberta</td><td class="r">Grátis</td><td class="r"><b>R$ 0,0350</b></td></tr>
+        <tr class="changed"><td><b>Serviço</b> <span class="tag paid">novo</span></td><td>Resposta livre (texto, áudio, imagem, botões) com a janela aberta</td><td class="r">Grátis</td><td class="r"><b>R$ 0,0350</b><br><span class="note">após 1.000/mês por número</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Valores da tabela oficial da Meta em reais para destinatários com DDI +55. Utilidade e autenticação têm faixas de desconto por volume; serviço não tem. A cobrança é sempre por mensagem <b>entregue</b>: se não chegou ao cliente, não é cobrada.</p>
+  <div class="alert">
+    <strong>Prazo de forma de pagamento: 30/09/2026</strong>
+    <p>A Meta informou que, para empresas conectadas direto na API ou parceiros sem forma de pagamento cadastrada até 30 de setembro, ela deixa de entregar as mensagens de serviço a partir de 1º de outubro. O cliente final escreve, a empresa responde, e a resposta não chega. Se um cliente relatar esse sintoma nos primeiros dias de outubro, este é o primeiro ponto a verificar.</p>
+  </div>
+</section>
+
+<section id="servico">
+  <p class="eyebrow">Conceito</p>
+  <h2>O que é mensagem de serviço</h2>
+  <p>Quando o cliente manda uma mensagem, abre-se uma janela de atendimento de 24 horas, que reinicia a cada nova mensagem dele. Tudo o que a empresa envia dentro dessa janela, sem ser template, é mensagem de serviço. Não importa quem escreveu nem o formato.</p>
+  <div class="cols">
+    <div class="box pay">
+      <h3>Conta como serviço</h3>
+      <ul>
+        <li>Texto digitado pelo atendente, SDR ou closer</li>
+        <li>Áudio, imagem, vídeo, documento, link de pagamento</li>
+        <li>Resposta automática de chatbot e menu de botões</li>
+        <li>Resposta de agente de IA de terceiros (IA configurada em plataformas de atendimento)</li>
+        <li>Cada balão conta como uma mensagem</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Não é serviço</h3>
+      <ul>
+        <li>Templates (marketing, utilidade, autenticação), que seguem suas próprias tarifas</li>
+        <li>Respostas do <b>Meta Business Agent</b>, a IA da própria Meta, que é cobrada por token desde 01/08/2026</li>
+        <li>Mensagens que o cliente envia para a empresa</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note">Regra da Meta: cada mensagem tem uma única categoria e uma única cobrança. Uma resposta livre com conteúdo promocional continua sendo serviço; ela não vira marketing.</p>
+</section>
+
+<section id="franquia">
+  <p class="eyebrow">Franquia mensal</p>
+  <h2>Como funcionam as 1.000 mensagens grátis</h2>
+  <div class="cols">
+    <div class="box"><h3>É por número, não por empresa</h3><p>Uma empresa com 3 números conectados na API tem 3.000 mensagens grátis por mês, mil em cada. A sobra de um número não cobre o excesso de outro.</p></div>
+    <div class="box"><h3>Não acumula</h3><p>Usou 200 em outubro? Novembro começa com 1.000 de novo, não com 1.800. A franquia zera todo mês.</p></div>
+    <div class="box"><h3>Só vale para serviço</h3><p>Template de utilidade enviado dentro da janela <b>não</b> entra na franquia: é cobrado desde a primeira mensagem.</p></div>
+  </div>
+  <p>Contexto útil para quando o cliente lembrar da regra antiga: até outubro de 2024 existiam 1.000 <b>conversas</b> grátis por mês, e uma conversa inteira contava como uma só. A franquia nova é de 1.000 <b>mensagens</b>. O número é o mesmo, mas rende bem menos.</p>
+</section>
+
+<section id="gratis">
+  <p class="eyebrow">Sem mudança</p>
+  <h2>O que continua grátis</h2>
+  <div class="cols">
+    <div class="box ok"><h3>Mensagens recebidas</h3><p>A Meta cobra só o que sai da empresa. Tudo o que o cliente escreve é gratuito.</p></div>
+    <div class="box ok"><h3>Janela de 72h de anúncios</h3><p>Conversas iniciadas por anúncio Click-to-WhatsApp (Facebook/Instagram) ou botão da página, pelo app de celular, abrem uma janela gratuita de 72h se a empresa responder em até 24h. Dentro dela, serviço e templates seguem grátis.</p></div>
+    <div class="box ok"><h3>WhatsApp Business do celular</h3><p>O app gratuito instalado no celular não é afetado. A regra vale para a API oficial (WhatsApp Business Platform).</p></div>
+  </div>
+</section>
+
+<section id="exemplos">
+  <p class="eyebrow">Na prática</p>
+  <h2>Três conversas, com o custo de cada balão</h2>
+  <p>Valores de R$ 0,0350 por mensagem de serviço ou utilidade e R$ 0,3217 por marketing. A coluna "após a franquia" considera que o número já passou das 1.000 mensagens de serviço do mês.</p>
+
+  <div class="chat">
+    <div class="chat-head"><h3>1. Cliente chama para agendar</h3><p>Janela aberta pelo cliente · atendimento por agente de IA</p></div>
+    <div class="row in"><div class="bub"><small>Cliente</small>Oi, quero agendar um ultrassom</div><div class="cost">R$ 0,00<em>recebida</em></div></div>
+    <div class="row out"><div class="bub"><small>Agente de IA</small>Olá! Vou te ajudar com o agendamento.</div><div class="cost">R$ 0,0350<em>serviço</em></div></div>
+    <div class="row out"><div class="bub"><small>Agente de IA</small>Em qual unidade você prefere?</div><div class="cost">R$ 0,0350<em>serviço</em></div></div>
+    <div class="row in"><div class="bub"><small>Cliente</small>Centro</div><div class="cost">R$ 0,00<em>recebida</em></div></div>
+    <div class="row out"><div class="bub"><small>Agente de IA</small>Tenho amanhã às 14h ou às 16h.</div><div class="cost">R$ 0,0350<em>serviço</em></div></div>
+    <div class="row in"><div class="bub"><small>Cliente</small>14h</div><div class="cost">R$ 0,00<em>recebida</em></div></div>
+    <div class="row out"><div class="bub"><small>Agente de IA</small>Agendado para amanhã, 14h, unidade Centro.</div><div class="cost">R$ 0,0350<em>serviço</em></div></div>
+    <div class="row out"><div class="bub"><small>Template de utilidade</small>Confirmação do agendamento com botões Confirmar / Remarcar</div><div class="cost">R$ 0,0350<em>utilidade na janela</em></div></div>
+    <div class="totals">
+      <div><span>Até 30/09</span><b>R$ 0,0000</b></div>
+      <div><span>A partir de 01/10, dentro da franquia</span><b>R$ 0,0350</b></div>
+      <div class="now"><span>A partir de 01/10, após a franquia</span><b>R$ 0,1750</b></div>
+    </div>
+  </div>
+  <p class="note">Repare nos dois primeiros balões do agente: poderiam ser um só. Juntar essas mensagens reduziria o custo desse atendimento em 20%.</p>
+
+  <div class="chat">
+    <div class="chat-head"><h3>2. Empresa faz a prospecção (outbound)</h3><p>Janela aberta por template de marketing · atendimento humano</p></div>
+    <div class="row out"><div class="bub"><small>Template de marketing</small>Convite para conhecer a nova condição comercial</div><div class="cost">R$ 0,3217<em>marketing</em></div></div>
+    <div class="row in"><div class="bub"><small>Lead</small>Tenho interesse, como funciona?</div><div class="cost">R$ 0,00<em>recebida</em></div></div>
+    <div class="row out"><div class="bub"><small>SDR</small>Explicação da oferta</div><div class="cost">R$ 0,0350<em>serviço</em></div></div>
+    <div class="row out"><div class="bub"><small>SDR</small>Envio do material em PDF</div><div class="cost">R$ 0,0350<em>serviço</em></div></div>
+    <div class="row in"><div class="bub"><small>Lead</small>Consegue uma conversa amanhã?</div><div class="cost">R$ 0,00<em>recebida</em></div></div>
+    <div class="row out"><div class="bub"><small>SDR</small>Sugestão de dois horários</div><div class="cost">R$ 0,0350<em>serviço</em></div></div>
+    <div class="row out"><div class="bub"><small>SDR</small>Link da reunião</div><div class="cost">R$ 0,0350<em>serviço</em></div></div>
+    <div class="row out"><div class="bub"><small>SDR</small>"Até amanhã!"</div><div class="cost">R$ 0,0350<em>serviço</em></div></div>
+    <div class="totals">
+      <div><span>Até 30/09</span><b>R$ 0,3217</b></div>
+      <div><span>A partir de 01/10, dentro da franquia</span><b>R$ 0,3217</b></div>
+      <div class="now"><span>A partir de 01/10, após a franquia</span><b>R$ 0,4967</b></div>
+    </div>
+  </div>
+  <p class="note">O disparo de marketing é pago uma vez. O que cresce é a conversa: cada balão a mais do atendente é uma cobrança a mais.</p>
+
+  <div class="chat">
+    <div class="chat-head"><h3>3. Lead chega por anúncio Click-to-WhatsApp</h3><p>Janela gratuita de 72h · qualquer atendimento</p></div>
+    <div class="row in"><div class="bub"><small>Lead (via anúncio no Instagram)</small>Vi o anúncio, quero saber o preço</div><div class="cost">R$ 0,00<em>recebida</em></div></div>
+    <div class="row out"><div class="bub"><small>Atendente</small>Resposta em até 24h, abre a janela de 72h grátis</div><div class="cost">R$ 0,00<em>janela 72h</em></div></div>
+    <div class="row out"><div class="bub"><small>Atendente</small>Mais 10 mensagens de negociação nos 3 dias seguintes</div><div class="cost">R$ 0,00<em>janela 72h</em></div></div>
+    <div class="row out"><div class="bub"><small>Template de utilidade</small>Confirmação do pedido</div><div class="cost">R$ 0,00<em>janela 72h</em></div></div>
+    <div class="totals">
+      <div><span>Até 30/09</span><b>R$ 0,0000</b></div>
+      <div><span>A partir de 01/10</span><b>R$ 0,0000</b></div>
+      <div><span>Atenção</span><b style="font-family:var(--f-body);font-size:.9rem;font-weight:500">Após as 72h, volta a regra normal</b></div>
+    </div>
+  </div>
+</section>
+
+<section id="simulador">
+  <p class="eyebrow">Ferramenta</p>
+  <h2>Simulador de custo mensal</h2>
+  <p>Use durante a conversa com o cliente para estimar o impacto. O cálculo considera o volume distribuído igualmente entre os números.</p>
+  <div class="sim">
+    <div class="presets" role="group" aria-label="Cenários de exemplo">
+      <button type="button" data-p="1,120,6,0" aria-pressed="false">Consultório · 1 número</button>
+      <button type="button" data-p="3,1500,8,300" aria-pressed="true">Operação média · 3 números</button>
+      <button type="button" data-p="5,7500,8,2000" aria-pressed="false">Central · 5 números</button>
+      <button type="button" data-p="10,20000,10,5000" aria-pressed="false">Contact center · 10 números</button>
+    </div>
+    <div class="fields">
+      <label for="f-num">Números conectados na API<input id="f-num" type="number" min="1" step="1" value="3"></label>
+      <label for="f-att">Atendimentos por mês<input id="f-att" type="number" min="0" step="10" value="1500"></label>
+      <label for="f-msg">Mensagens enviadas por atendimento<input id="f-msg" type="number" min="0" step="1" value="8"></label>
+      <label for="f-utl">Templates de utilidade dentro da janela / mês<input id="f-utl" type="number" min="0" step="10" value="300"></label>
+    </div>
+    <div class="result" aria-live="polite">
+      <div><span>Mensagens de serviço</span><b id="r-srv" class="num">—</b></div>
+      <div><span>Cobertas pela franquia</span><b id="r-free" class="num">—</b></div>
+      <div><span>Mensagens cobradas</span><b id="r-paid" class="num">—</b></div>
+      <div class="big"><span>Custo novo por mês</span><b id="r-cost" class="num">—</b></div>
+    </div>
+    <p class="note" id="r-line">—</p>
+  </div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Porte</th><th class="r">Números</th><th class="r">Msgs de serviço/mês</th><th class="r">Franquia</th><th class="r">Custo de serviço/mês</th></tr></thead>
+      <tbody>
+        <tr><td>Consultório, loja pequena</td><td class="r">1</td><td class="r">800</td><td class="r">1.000</td><td class="r">R$ 0,00</td></tr>
+        <tr><td>Operação enxuta</td><td class="r">1</td><td class="r">3.000</td><td class="r">1.000</td><td class="r">R$ 70,00</td></tr>
+        <tr><td>Operação média</td><td class="r">3</td><td class="r">12.000</td><td class="r">3.000</td><td class="r">R$ 315,00</td></tr>
+        <tr><td>Central de atendimento</td><td class="r">5</td><td class="r">60.000</td><td class="r">5.000</td><td class="r">R$ 1.925,00</td></tr>
+        <tr><td>Contact center</td><td class="r">10</td><td class="r">200.000</td><td class="r">10.000</td><td class="r">R$ 6.650,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Regra de bolso: com 8 mensagens por atendimento, um número usa a franquia inteira em cerca de 125 atendimentos no mês.</p>
+</section>
+
+<section id="ia">
+  <p class="eyebrow">Impacto nos agentes</p>
+  <h2>Agentes de IA: cada balão agora custa</h2>
+  <p>Resposta de IA de terceiros é cobrada exatamente como a de um humano: R$ 0,0350 por mensagem após a franquia. Por isso, a forma como o agente é configurado passa a pesar na conta do cliente.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Configuração do agente</th><th class="r">Msgs por atendimento</th><th class="r">1.000 atend./mês (1 número)</th><th class="r">Custo/mês</th></tr></thead>
+      <tbody>
+        <tr><td>Responde em 3 balões curtos, 4 turnos</td><td class="r">12</td><td class="r">12.000 − 1.000</td><td class="r">R$ 385,00</td></tr>
+        <tr><td>Responde em 1 mensagem completa, 4 turnos</td><td class="r">4</td><td class="r">4.000 − 1.000</td><td class="r">R$ 105,00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Mesma conversa, mesmo resultado para o cliente final, diferença de R$ 280 por mês. Na implantação, vale revisar: respostas quebradas em vários balões, saudações separadas da pergunta, menus que disparam uma mensagem a cada nível, e templates de utilidade usados dentro da janela quando uma mensagem comum resolveria.</p>
+  <div class="box">
+    <h3>E o Meta Business Agent?</h3>
+    <p>É a IA da própria Meta, com regra diferente: desde 01/08/2026 é cobrada por token, a US$ 2,00 por 1 milhão de tokens. A Meta estima 20 a 25 mil tokens por mensagem, algo como US$ 0,04 a 0,05 por resposta, e essa cobrança não é zerada pela janela de 72h de anúncios. Na comparação da própria Meta para o Brasil, o custo de entrega de uma resposta de IA de terceiros é US$ 0,0068 por mensagem, somado ao custo do provedor de IA.</p>
+  </div>
+</section>
+
+<section id="cliente">
+  <p class="eyebrow">Para SDRs e closers</p>
+  <h2>Como falar com o cliente</h2>
+  <div class="tips">
+    <div class="tip"><span class="k">Reforce</span><h3>A cobrança é da Meta, e vale para toda a API oficial</h3><p>Nenhuma plataforma que usa a API oficial escapa dessa regra. Não é um custo criado por fornecedor de atendimento.</p></div>
+    <div class="tip"><span class="k">Tranquilize</span><h3>Operações pequenas podem nem sentir</h3><p>Com até cerca de 125 atendimentos por mês em um número, a franquia cobre todas as respostas.</p></div>
+    <div class="tip"><span class="k">Quantifique</span><h3>Leve o número, não o susto</h3><p>Pergunte quantos atendimentos o cliente faz por mês e quantos números usa, e rode o simulador na hora. R$ 0,035 por mensagem é pouco por unidade; o que importa é volume vezes mensagens por atendimento.</p></div>
+    <div class="tip"><span class="k">Oriente</span><h3>Mostre onde economizar</h3><p>Menos balões por resposta, anúncios Click-to-WhatsApp para aproveitar as 72h grátis, e mensagens comuns no lugar de templates de utilidade dentro da janela.</p></div>
+  </div>
+  <div class="script">
+    <small>Exemplo de fala</small>
+    <p>"A partir de 1º de outubro, a Meta passa a cobrar R$ 0,035 por resposta enviada pela API oficial, com 1.000 respostas grátis por mês em cada número. Para o seu volume, de cerca de X atendimentos, isso dá em torno de R$ Y por mês. Na configuração, a gente consegue reduzir esse número ajustando a forma como o agente responde."</p>
+  </div>
+</section>
+
+<section id="faq">
+  <p class="eyebrow">Dúvidas do time</p>
+  <h2>Perguntas frequentes</h2>
+  <div>
+    <details><summary>A mensagem que o cliente manda é cobrada?</summary><p>Não. A Meta cobra só as mensagens que a empresa envia e que foram entregues.</p></details>
+    <details><summary>Resposta de robô ou IA custa o mesmo que a de um atendente?</summary><p>Sim, se for IA de terceiros: as duas são mensagem de serviço, a R$ 0,0350 após a franquia. A exceção é o Meta Business Agent, que é cobrado por token.</p></details>
+    <details><summary>As 1.000 grátis são por empresa ou por número?</summary><p>Por número de telefone. Três números somam 3.000 mensagens grátis por mês, mas a sobra de um não cobre outro.</p></details>
+    <details><summary>A franquia acumula de um mês para o outro?</summary><p>Não. Zera e recomeça todo mês.</p></details>
+    <details><summary>Template de utilidade enviado com a janela aberta entra na franquia?</summary><p>Não. Ele passa a custar R$ 0,0350 desde o primeiro envio. A franquia é só para mensagens de serviço.</p></details>
+    <details><summary>Existe desconto por volume para mensagem de serviço?</summary><p>Não. A Meta mantém faixas de volume apenas para utilidade e autenticação.</p></details>
+    <details><summary>O preço do marketing mudou?</summary><p>No Brasil, não. Marketing segue em R$ 0,3217, e utilidade e autenticação em R$ 0,0350. Os reajustes de outubro foram em outros países.</p></details>
+    <details><summary>Quem usa o WhatsApp Business do celular é afetado?</summary><p>Não. A regra vale só para a API oficial.</p></details>
+    <details><summary>E se a conta não tiver forma de pagamento cadastrada?</summary><p>A Meta informou que para de entregar as mensagens de serviço a partir de 1º de outubro para quem não tinha forma de pagamento cadastrada até 30 de setembro. O cliente escreve normalmente, mas a resposta da empresa não chega.</p></details>
+    <details><summary>Existe alguma exceção?</summary><p>Sim. Órgãos de governo e organizações sem fins lucrativos elegíveis continuam com mensagens de serviço grátis além da franquia, até 31 de dezembro de 2027.</p></details>
+    <details><summary>A mensagem que não foi entregue é cobrada?</summary><p>Não. A cobrança é por mensagem entregue. Número inexistente ou aparelho sem conexão não geram custo.</p></details>
+  </div>
+</section>
+
+<section id="fontes">
+  <p class="eyebrow">Referências</p>
+  <h2>Fontes</h2>
+  <ul class="sources">
+    <li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing#rate-cards-effective-october-1-2026" target="_blank" rel="noopener">Meta · Pricing on the WhatsApp Business Platform (tabelas de 01/10/2026)</a></li>
+    <li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/non-template-messages" target="_blank" rel="noopener">Meta · Pricing for non-template messages (serviço, utilidade na janela e Meta Business Agent)</a></li>
+    <li><a href="https://business.whatsapp.com/products/platform-pricing#rates" target="_blank" rel="noopener">WhatsApp Business · tabela interativa de preços</a></li>
+  </ul>
+</section>
+
+<footer>Material interno de treinamento · Poli Digital · Valores conferidos em 30/09/2026. A Meta pode atualizar tarifas no primeiro dia de cada trimestre.</footer>
+</div>
+
+<script>
+(function(){
+  var RATE = 0.035, FREE = 1000;
+  var $ = function(id){ return document.getElementById(id); };
+  var brl = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+  var int = new Intl.NumberFormat('pt-BR');
+  var f = { num:$('f-num'), att:$('f-att'), msg:$('f-msg'), utl:$('f-utl') };
+  function val(el){ var v = parseFloat(el.value); return isFinite(v) && v > 0 ? v : 0; }
+  function calc(){
+    var n = Math.max(1, Math.round(val(f.num))), att = val(f.att), msg = val(f.msg), utl = Math.round(val(f.utl));
+    var srv = Math.round(att * msg);
+    var perNum = srv / n;
+    var paidPerNum = Math.max(0, perNum - FREE);
+    var paid = Math.round(paidPerNum * n);
+    var free = srv - paid;
+    var cost = paid * RATE + utl * RATE;
+    $('r-srv').textContent = int.format(srv);
+    $('r-free').textContent = int.format(free);
+    $('r-paid').textContent = int.format(paid);
+    $('r-cost').textContent = brl.format(cost);
+    var line = 'Serviço: ' + int.format(paid) + ' × R$ 0,035 = ' + brl.format(paid*RATE) + ' · Utilidade na janela: ' + int.format(utl) + ' × R$ 0,035 = ' + brl.format(utl*RATE) + '. Até 30/09 esse valor era R$ 0,00.';
+    if (att > 0 && srv > 0) line += ' Custo médio por atendimento: ' + brl.format(cost/att) + '.';
+    $('r-line').textContent = line;
+  }
+  Object.keys(f).forEach(function(k){ f[k].addEventListener('input', function(){
+    document.querySelectorAll('.presets button').forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+    calc();
+  }); });
+  document.querySelectorAll('.presets button').forEach(function(b){
+    b.addEventListener('click', function(){
+      var p = b.getAttribute('data-p').split(',');
+      f.num.value = p[0]; f.att.value = p[1]; f.msg.value = p[2]; f.utl.value = p[3];
+      document.querySelectorAll('.presets button').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      calc();
+    });
+  });
+  calc();
+})();
+</script>
